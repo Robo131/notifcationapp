@@ -23,7 +23,13 @@ jobs:
           cd "$IOS_DIR"
           xcodebuild -project DelayedAlert.xcodeproj -scheme DelayedAlert -configuration Release \
             -sdk iphoneos -derivedDataPath build \
-            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build > build.log 2>&1 || {
+            echo "=== BUILD ERRORS ==="
+            grep -E "error:" build.log | sort -u | head -40
+            echo "=== LAST LINES ==="
+            tail -n 30 build.log
+            exit 1
+          }
           mkdir Payload && cp -R build/Build/Products/Release-iphoneos/DelayedAlert.app Payload/
           zip -qr DelayedAlert.ipa Payload
       - uses: actions/upload-artifact@v4
