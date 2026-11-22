@@ -92,7 +92,7 @@ final class AlertCenter: NSObject, ObservableObject, UNUserNotificationCenterDel
                                          sender: person, attachments: nil)
         let interaction = INInteraction(intent: intent, response: nil)
         interaction.direction = .incoming
-        interaction.donate(nil)
+        interaction.donate(completion: nil)
         guard let updated = try? c.updating(from: intent),
               let m = updated.mutableCopy() as? UNMutableNotificationContent else { return nil }
         m.sound = UNNotificationSound(named: UNNotificationSoundName(sound.file))
